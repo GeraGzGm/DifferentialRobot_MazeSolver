@@ -26,10 +26,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'driving_node = maze_bot.driving:main' ,
-            'go_to_goal = maze_bot.go_to_goal:main',
-            'video_recorder = maze_bot.video_saver:main',
-            'maze_solver = maze_bot.maze_solver:main',
+            'driving_node = maze_bot.DrivingNode:main' ,
+            'go_to_goal = maze_bot.GoToGoal:main',
+            'video_recorder = maze_bot.VideoSaver:main',
+            'maze_solver = maze_bot.MazeSolver:main',
+
         ],
     },
 )
