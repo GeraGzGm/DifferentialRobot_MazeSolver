@@ -25,11 +25,10 @@ class MazeSolver(Node):
         cv2.waitKey(1)
 
     def maze_solving(self):
-        self.vel_msg.linear.x = 0.0
+        self.vel_msg.linear.x = 0.1
         self.vel_msg.angular.z = 0.0
 
         self.velocity_publisher.publish(self.vel_msg)
-
 
 
 def main(args =None):
