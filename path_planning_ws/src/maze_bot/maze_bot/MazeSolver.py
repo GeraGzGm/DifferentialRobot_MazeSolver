@@ -8,8 +8,10 @@ from sensor_msgs.msg import Image
 import cv2
 import numpy as np
 
+from Menus.Method_Selector import Method_Selector
 from .BotLocalization import Bot_Localizer
 from .BotMapping import Mapping
+from .BotPathPlanning import Bot_PathPlanner
 
 class MazeSolver(Node):
     def __init__(self):
@@ -24,7 +26,12 @@ class MazeSolver(Node):
 
         self.localizer_BOT = Bot_Localizer()
         self.mapping = Mapping()
+        self.path_planner = Bot_PathPlanner()
+        self.Method_Selector = Method_Selector()
+
         self.frame = []
+        self.Done = False
+
 
     def get_video_feed_cb(self,data):
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8')
@@ -35,12 +42,28 @@ class MazeSolver(Node):
         #cv2.waitKey(1)
 
     def maze_solving(self):
-        frame_display = self.frame.copy()
+        #self.Method_Selector.win.update()
 
-        self.localizer_BOT.Localize_bot(self.frame, frame_display)
-        self.mapping.Graphify(self.localizer_BOT.Occupancy_grid)
+        if self.Method_Selector.Method == "":
+            self.Method_Selector.run()
+        
+        else:
+            frame_display = self.frame.copy()
+            self.localizer_BOT.Localize_bot(self.frame, frame_display)
 
-        self.vel_msg.linear.x = 0.0
+            if not self.Done:
+                self.mapping.Graphify(self.localizer_BOT.Occupancy_grid)
+                start = self.mapping.Graph.start
+                end = self.mapping.Graph.end
+                maze = self.mapping.maze
+                
+                method = self.Method_Selector.Method
+
+                self.path_planner.find_path_nd_display(self.mapping.Graph.graph, start, end , maze ,method)
+
+                self.Done = True
+
+        self.vel_msg.linear.x = 0.1
         self.vel_msg.angular.z = 0.1
 
         self.velocity_publisher.publish(self.vel_msg)

@@ -16,14 +16,17 @@ class Mapping():
         self.Directions = [False, False, False, False]
 
         self.Maze_Connect = []
+        self.maze = []
 
     def Reset_Connection(self):
         self.Directions = [False, False, False, False]
 
-    def Display_GraphConnections(self, _Node, N_Node, case = '', color = (0,0,255)):
-        self.Maze_Connect = cv2.line(self.Maze_Connect,(_Node[1],_Node[0]),(N_Node[1],N_Node[0]), color, 1)
-        cv2.imshow("Nodes Conected", self.Maze_Connect)
-        cv2.waitKey(1)
+    def Display_GraphConnections(self, _Node, N_Node, case = '', color = (0,0,255), Display = False):
+
+        if Display:
+            self.Maze_Connect = cv2.line(self.Maze_Connect,(_Node[1],_Node[0]),(N_Node[1],N_Node[0]), color, 1)
+            cv2.imshow("Nodes Conected", self.Maze_Connect)
+            cv2.waitKey(1)
 
     def Neihbor_Connection(self, Maze, r, c, case, Lstep = 1, Upstep = 0, totalNodes = 0):
 
@@ -240,8 +243,7 @@ class Mapping():
         
         cv2.imshow("IP" , Maze_color)
         cv2.waitKey(1)
-            
-        
+                  
     def Graphify(self, Maze: np.array):
 
         if not self.Mapping_Done:
@@ -268,6 +270,8 @@ class Mapping():
             #cv2.imshow("Thinned Maze", Thinned_maze)
             
             #cv2.imshow("Bw_Maze", Bw_Maze)
+
+            self.maze = Bw_Maze
             cv2.imshow("Extracted_Maze", Extracted_Maze)
             cv2.waitKey(1)
 
