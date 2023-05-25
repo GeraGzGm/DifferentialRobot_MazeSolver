@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 from .BotLocalization import Bot_Localizer
-
+from .BotMapping import Mapping
 
 class MazeSolver(Node):
     def __init__(self):
@@ -23,6 +23,7 @@ class MazeSolver(Node):
         self.vel_msg = Twist()
 
         self.localizer_BOT = Bot_Localizer()
+        self.mapping = Mapping()
         self.frame = []
 
     def get_video_feed_cb(self,data):
@@ -37,6 +38,7 @@ class MazeSolver(Node):
         frame_display = self.frame.copy()
 
         self.localizer_BOT.Localize_bot(self.frame, frame_display)
+        self.mapping.Graphify(self.localizer_BOT.Occupancy_grid)
 
         self.vel_msg.linear.x = 0.0
         self.vel_msg.angular.z = 0.1
