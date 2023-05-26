@@ -3,11 +3,13 @@ from glob import glob
 import os
 
 package_name = 'maze_bot'
+package_name2 = 'PP_Algorithms'
+package_name3 = 'Menus'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name],
+    packages=[package_name,package_name2,package_name3],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
