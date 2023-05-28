@@ -167,7 +167,7 @@ class Mapping():
 
         self.Graph.graph.clear()
         self.Maze_Connect = cv2.cvtColor(Maze, cv2.COLOR_GRAY2BGR)
-        cv2.namedWindow("Nodes Conected", cv2.WINDOW_FREERATIO)
+        #cv2.namedWindow("Nodes Conected", cv2.WINDOW_FREERATIO)
 
         Turns = 0
         Junc_3 = 0

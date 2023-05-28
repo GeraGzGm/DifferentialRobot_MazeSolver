@@ -84,7 +84,7 @@ class Bot_PathPlanner():
             self.A_Star.shortest_path_overlayed = maze_bgr
             
         self.img_shortest_path = maze_bgr.copy()
-
+    
     def find_path_nd_display(self,graph,start,end,maze,method = "DFS"):
 
         Path_str = "Path"
@@ -123,5 +123,6 @@ class Bot_PathPlanner():
         self.path_to_goal = pathpts_to_display
 
         self.draw_path_on_maze(maze, pathpts_to_display, method)
+
  
 

@@ -30,7 +30,7 @@ class Bot_Localizer():
                 min_idx = idx
         
         return min_idx
-
+    
     @staticmethod
     def Crop_Maze(ROI_MASK, contours):
         maze_crop = np.zeros_like(ROI_MASK)
@@ -155,25 +155,25 @@ class Bot_Localizer():
             self.Extract_Background(frame)
             self.is_bg_extracted = True
         
-        else:
-            #Foreground extraction
+      
+        Foreground = cv2.absdiff(frame, self.Background)
+        Foreground = cv2.cvtColor(Foreground, cv2.COLOR_BGR2GRAY)
+        Foreground = cv2.threshold(Foreground, 15, 255, cv2.THRESH_OTSU)[1]
 
-            Foreground = cv2.absdiff(frame, self.Background)
-            Foreground = cv2.cvtColor(Foreground, cv2.COLOR_BGR2GRAY)
-            Foreground = cv2.threshold(Foreground, 15, 255, cv2.THRESH_OTSU)[1]
+        self.Get_BotLocalization(Foreground)
 
-            self.Get_BotLocalization(Foreground)
+        bot_cnt = cv2.findContours(Foreground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0]
 
-            bot_cnt = cv2.findContours(Foreground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0]
+        center, radius = cv2.minEnclosingCircle(bot_cnt[0])
+        Bot_CircularMask = cv2.circle(Foreground.copy(), 
+                                        (int(center[0]),int(center[1])), int(radius), (255,0,0),1)
+        Bot_CircularMask = cv2.bitwise_xor(Bot_CircularMask, Foreground)
 
-            center, radius = cv2.minEnclosingCircle(bot_cnt[0])
-            Bot_CircularMask = cv2.circle(Foreground.copy(), 
-                                          (int(center[0]),int(center[1])), int(radius), (255,0,0),1)
-            Bot_CircularMask = cv2.bitwise_xor(Bot_CircularMask, Foreground)
+        #frame_display[Foreground > 0] = frame_display[Foreground > 0] + (0,64,0)
+        frame_display[Bot_CircularMask > 0] = (0,255,0)
 
-            #frame_display[Foreground > 0] = frame_display[Foreground > 0] + (0,64,0)
-            frame_display[Bot_CircularMask > 0] = (0,255,0)
-    
-            #cv2.imshow("Foreground", Foreground)
-            cv2.imshow("frame_display", frame_display)
-            cv2.waitKey(1)    
+        #cv2.imshow("Foreground", Foreground)
+        #cv2.imshow("frame_display", frame_display)
+        #cv2.waitKey(1)    
+
+        return frame_display
